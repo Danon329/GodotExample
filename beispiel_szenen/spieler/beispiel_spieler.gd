@@ -1,10 +1,11 @@
+class_name Spieler
 extends CharacterBody2D
 
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var anim_player: AnimationPlayer = $AnimationPlayer
 
 @export var gravity: float = 400.0
-@export var break_factor: float = 20.0
+@export var break_factor: float = 400.0
 @export var speed: float = 200.0
 
 const JUMP_HEIGHT: float = -300.0
@@ -13,12 +14,19 @@ var direction: float = 0
 var is_walking: bool = false
 var is_in_air: bool = false
 
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("esc"):
+		var main_scene: PackedScene = load("uid://cr07o1s3r4bs3")
+		get_tree().change_scene_to_packed(main_scene)
+
 func _physics_process(delta: float) -> void:
 	apply_gravity(delta)
-	apply_break()
+	apply_break(delta)
 	
 	movement()
 	move_and_slide()
+
+	fall_off()
 
 
 func apply_gravity(delta: float) -> void:
@@ -38,11 +46,12 @@ func apply_gravity(delta: float) -> void:
 #	else:
 #		velocity.x = 0
 
-func apply_break() -> void:
-	if velocity.x < -10 or velocity.x > 10:
-		velocity.x += break_factor * -direction # improve math behind break
+func apply_break(delta: float) -> void:
+	if (velocity.x <= -10 or velocity.x >= 10) and Input.get_axis("links", "rechts") == 0:
+		velocity.x += break_factor * -direction * delta
 	elif velocity.x > -10 and velocity.x < 10:
 		velocity.x = 0
+
 		if is_on_floor():
 			anim_player.play("idle")
 			is_walking = false
@@ -80,3 +89,7 @@ func flip_sprite() -> void:
 	elif velocity.x < 0:
 		sprite.flip_h = true
 
+
+func fall_off():
+	if position.y > 1000:
+		queue_free()
