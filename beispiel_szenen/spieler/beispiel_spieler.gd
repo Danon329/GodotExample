@@ -5,12 +5,13 @@ extends CharacterBody2D
 @onready var anim_player: AnimationPlayer = $AnimationPlayer
 
 @export var gravity: float = 400.0
-@export var break_factor: float = 400.0
+@export var break_factor: float = 1.0
 @export var speed: float = 200.0
 
 const JUMP_HEIGHT: float = -300.0
 
 var direction: float = 0
+var weight: float = 0.0
 var is_walking: bool = false
 var is_in_air: bool = false
 
@@ -24,6 +25,7 @@ func _physics_process(delta: float) -> void:
 	apply_break(delta)
 	
 	movement()
+	print(velocity)
 	move_and_slide()
 
 	fall_off()
@@ -34,6 +36,7 @@ func apply_gravity(delta: float) -> void:
 		velocity.y += gravity * delta
 	elif is_on_floor() and is_in_air:
 		is_in_air = false
+		break_factor = 1.0
 		if is_walking:
 			anim_player.play("walk")
 		else:
@@ -46,11 +49,16 @@ func apply_gravity(delta: float) -> void:
 #	else:
 #		velocity.x = 0
 
+
 func apply_break(delta: float) -> void:
 	if (velocity.x <= -10 or velocity.x >= 10) and Input.get_axis("links", "rechts") == 0:
-		velocity.x += break_factor * -direction * delta
+		weight += 0.7 * delta * break_factor
+
+		velocity = velocity.lerp(Vector2(0, velocity.y),1 - exp(-weight))
 	elif velocity.x > -10 and velocity.x < 10:
 		velocity.x = 0
+		weight = 0.0
+		break_factor = 1.0
 
 		if is_on_floor():
 			anim_player.play("idle")
@@ -79,6 +87,7 @@ func jump() -> void:
 		velocity.y = JUMP_HEIGHT
 		anim_player.play("jump")
 		is_in_air = true
+		break_factor = 0.1
 	elif Input.is_action_just_released("springen"):
 		velocity.y = 0
 
