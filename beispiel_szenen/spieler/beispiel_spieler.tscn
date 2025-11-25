@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://cy1diudk4di50"]
+[gd_scene load_steps=13 format=3 uid="uid://cy1diudk4di50"]
 
 [ext_resource type="Texture2D" uid="uid://b1p3l4qjmbi3b" path="res://assets/sprites/knight.png" id="1_hjhxv"]
 [ext_resource type="Script" uid="uid://dg3nc21b4l4l4" path="res://beispiel_szenen/spieler/beispiel_spieler.gd" id="1_n1ig8"]
@@ -122,6 +122,9 @@ _data = {
 &"walk": SubResource("Animation_n1ig8")
 }
 
+[sub_resource type="LabelSettings" id="LabelSettings_n1ig8"]
+font_size = 64
+
 [node name="BeispielSpieler" type="CharacterBody2D"]
 collision_layer = 0
 script = ExtResource("1_n1ig8")
@@ -151,3 +154,13 @@ libraries = {
 &"": SubResource("AnimationLibrary_iadoc")
 }
 autoplay = "idle"
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Label" type="Label" parent="CanvasLayer"]
+offset_right = 1.0
+offset_bottom = 23.0
+text = "Test"
+label_settings = SubResource("LabelSettings_n1ig8")
+
+[connection signal="area_entered" from="HitBoxArea2D" to="." method="_on_hit_box_area_2d_area_entered"]

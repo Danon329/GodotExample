@@ -3,10 +3,12 @@ extends CharacterBody2D
 
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var anim_player: AnimationPlayer = $AnimationPlayer
+@onready var label: Label = $CanvasLayer/Label
 
 @export var gravity: float = 400.0
 @export var break_factor: float = 1.0
 @export var speed: float = 200.0
+@export var health: int = 5
 
 const JUMP_HEIGHT: float = -300.0
 
@@ -14,6 +16,10 @@ var direction: float = 0
 var weight: float = 0.0
 var is_walking: bool = false
 var is_in_air: bool = false
+
+func _ready() -> void:
+	label.text = "Leben: " + str(health)
+
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("esc"):
@@ -25,7 +31,6 @@ func _physics_process(delta: float) -> void:
 	apply_break(delta)
 	
 	movement()
-	print(velocity)
 	move_and_slide()
 
 	fall_off()
@@ -102,3 +107,8 @@ func flip_sprite() -> void:
 func fall_off():
 	if position.y > 1000:
 		queue_free()
+
+
+func _on_hit_box_area_2d_area_entered(area: Area2D) -> void:
+	health -= 1
+	label.text = "Leben: " + (str(health))

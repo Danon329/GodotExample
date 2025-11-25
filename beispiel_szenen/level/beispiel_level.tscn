@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=4 uid="uid://d16mv3d2kmn6q"]
+[gd_scene load_steps=6 format=4 uid="uid://d16mv3d2kmn6q"]
 
 [ext_resource type="Texture2D" uid="uid://bs7uwet5pvxk8" path="res://assets/sprites/world_tileset.png" id="1_gempk"]
 [ext_resource type="PackedScene" uid="uid://cy1diudk4di50" path="res://beispiel_szenen/spieler/beispiel_spieler.tscn" id="2_tk6nl"]
+[ext_resource type="PackedScene" uid="uid://yr31eekt81rp" path="res://beispiel_szenen/gegner/beispiel_gegner.tscn" id="3_7ivyl"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_tk6nl"]
 texture = ExtResource("1_gempk")
@@ -276,6 +277,7 @@ texture = ExtResource("1_gempk")
 
 [sub_resource type="TileSet" id="TileSet_7ivyl"]
 physics_layer_0/collision_layer = 1
+physics_layer_0/collision_mask = 9
 terrain_set_0/mode = 2
 terrain_set_0/terrain_0/name = "Grüne Erde"
 terrain_set_0/terrain_0/color = Color(1.8770993e-06, 0.44510353, 0.43654048, 1)
@@ -295,3 +297,6 @@ tile_set = SubResource("TileSet_7ivyl")
 
 [node name="BeispielSpieler" parent="." instance=ExtResource("2_tk6nl")]
 position = Vector2(53, -54)
+
+[node name="BeispielGegner" parent="." instance=ExtResource("3_7ivyl")]
+position = Vector2(189, -12)
